@@ -33,6 +33,7 @@
       font-weight: 700;
       color: #333;
       line-height: 1.5em;
+      transition: all 0.5s ease;
     }
 
     #author {
@@ -40,6 +41,7 @@
       font-size: 1em;
       font-weight: 400;
       color: #555;
+      transition: all 0.5s ease;
     }
 
     @keyframes fadeIn {
@@ -80,45 +82,34 @@
       "You carry invisible strength every day. Believe in yourself; miracles are built from persistence. 🌿💛"
     ];
 
-    // Background colors
     const colors = ["#FFDAB9","#E0FFFF","#FFE4E1","#F0E68C","#D8BFD8","#AFEEEE","#FFFACD","#F5DEB3","#E6E6FA","#F0FFF0"];
-
-    // Font families
     const fonts = ["'Roboto', sans-serif", "'Montserrat', sans-serif", "'Lora', serif"];
 
-    // Pick random quote, background, and font
-    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
+    function showRandomQuote() {
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
 
-    // Set values
-    document.getElementById('quote').innerText = randomQuote;
-    document.body.style.backgroundColor = randomColor;
-    document.getElementById('quote').style.fontFamily = randomFont;
-  </script>
-</body>
-</html>
-      {text: "You are stronger than you think.", author: ""},
-      {text: "Progress, not perfection.", author: ""},
-      {text: "Turn your wounds into wisdom.", author: ""},
-      {text: "Little by little, day by day.", author: ""},
-      {text: "Stay humble, hustle hard.", author: ""},
-      {text: "You don’t have to be perfect to be amazing.", author: ""},
-      {text: "Push yourself, because no one else is going to do it for you.", author: ""},
-      {text: "Don’t wait for opportunity. Create it.", author: ""},
-      {text: "Be the energy you want to attract.", author: ""}
-    ];
+      const quoteElem = document.getElementById('quote');
+      const bodyElem = document.body;
 
-    const colors = ["#FFDAB9","#E0FFFF","#FFE4E1","#F0E68C","#D8BFD8","#AFEEEE","#FFFACD","#F5DEB3","#E6E6FA","#F0FFF0"];
+      // Animate fade out
+      quoteElem.style.opacity = 0;
+      bodyElem.style.transition = 'background-color 0.6s ease';
 
-    // Pick a random quote
-    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-    document.getElementById('quote').innerText = `"${randomQuote.text}"`;
-    document.getElementById('author').innerText = randomQuote.author;
+      setTimeout(() => {
+        quoteElem.innerText = randomQuote;
+        quoteElem.style.fontFamily = randomFont;
+        quoteElem.style.opacity = 1;
+        bodyElem.style.backgroundColor = randomColor;
+      }, 500); // Match fade out timing
+    }
 
-    // Pick a random background color
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    document.body.style.backgroundColor = randomColor;
+    // Show first quote immediately
+    showRandomQuote();
+
+    // Change quote every 10 seconds
+    setInterval(showRandomQuote, 10000);
   </script>
 </body>
 </html>
