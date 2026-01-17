@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Motivational Quote</title>
+  <style>
+    body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; padding: 20px; }
+    #quote { font-size: 1.5em; }
+  </style>
+</head>
+<body>
+  <div id="quote"></div>
+
+  <script>
+    const quotes = [
+      "Believe in yourself!",
+      "Every day is a new opportunity.",
+      "Keep pushing forward!",
+      "Dream big, start small.",
+      "Stay positive, work hard, make it happen.",
+      "Mistakes are proof you're trying.",
+      "Your only limit is your mind.",
+      "Start where you are, use what you have, do what you can.",
+      "Success is a journey, not a destination.",
+      "Courage over comfort.",
+      "Do something today that your future self will thank you for.",
+      "You are stronger than you think.",
+      "Progress, not perfection.",
+      "Turn your wounds into wisdom.",
+      "Little by little, day by day.",
+      "Stay humble, hustle hard.",
+      "You don’t have to be perfect to be amazing.",
+      "Push yourself, because no one else is going to do it for you.",
+      "Don’t wait for opportunity. Create it.",
+      "Be the energy you want to attract."
+    ];
+
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    document.getElementById('quote').innerText = quotes[randomIndex];
+  </script>
+</body>
+</html>
