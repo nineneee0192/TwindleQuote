@@ -15,6 +15,8 @@
       padding: 20px;
       text-align: center;
       transition: background-color 0.6s;
+      position: relative;
+      overflow: hidden;
     }
 
     #quote-box {
@@ -26,6 +28,8 @@
       opacity: 0;
       transform: translateY(20px);
       animation: fadeIn 1s forwards;
+      z-index: 2;
+      position: relative;
     }
 
     #quote {
@@ -44,11 +48,24 @@
       transition: all 0.5s ease;
     }
 
+    .emoji-bg {
+      position: absolute;
+      font-size: 2em;
+      opacity: 0.2;
+      user-select: none;
+      animation: float 10s linear infinite;
+    }
+
     @keyframes fadeIn {
       to {
         opacity: 1;
         transform: translateY(0);
       }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) translateX(0); }
+      100% { transform: translateY(-10vh) translateX(30px); }
     }
   </style>
 </head>
@@ -60,30 +77,31 @@
 
   <script>
     const quotes = [
-      "We know you’re struggling in silence, carrying doubts you don’t talk about. Still, you keep going. That alone proves how strong you really are. 💪✨",
-      "Even when it feels like the world is against you, every small step forward is proof of your courage. 🌱🌟",
-      "You survived days you thought you wouldn’t. You’re stronger than your fears and more resilient than your doubts. 🌸🔥",
-      "Behind every smile you wear, there’s a story of resilience. Keep shining; your journey inspires. 🌞💛",
-      "Every time you rise after a setback, you show the universe that nothing can break your spirit. 🌈💪",
-      "Some days are heavy, but your persistence makes you unstoppable. Keep going; better days are coming. 🌿✨",
-      "Your courage is quiet but powerful. Every challenge you face proves your strength. 🌟🕊️",
-      "You’ve been carrying battles no one else sees. That perseverance is your superpower. 💥🌸",
-      "Even when the path is unclear, your heart knows the way. Keep moving; growth comes quietly. 🌱🌙",
-      "You are doing the best you can, and that is more than enough. Every effort matters. 💛🔥",
-      "Through every storm, you’ve kept your hope alive. That makes you extraordinary. 🌊🌞",
-      "You may stumble, but each step forward is progress. Keep believing in yourself. 🌿✨",
-      "The weight you carry today builds the strength for tomorrow. You are resilient. 💪🌸",
-      "Even in silence, your determination speaks volumes. Keep going, quietly powerful. 🌟🕊️",
-      "Each day you keep trying is a victory, no matter how small. Celebrate your progress. 🌈💛",
-      "You are braver than you know, stronger than you feel, and more capable than you realize. 🌿🔥",
-      "The challenges you face today are shaping the hero you are becoming. Keep walking forward. 🌸✨",
-      "Your struggles do not define you, your courage does. Keep moving, keep thriving. 💪🌞",
-      "Even when unnoticed, your perseverance changes the world around you. Keep shining. 🌈🌟",
-      "You carry invisible strength every day. Believe in yourself; miracles are built from persistence. 🌿💛"
+      "We know you’re struggling in silence, carrying doubts you don’t talk about. Still, you keep going. That alone proves how strong you really are.",
+      "Even when it feels like the world is against you, every small step forward is proof of your courage.",
+      "You survived days you thought you wouldn’t. You’re stronger than your fears and more resilient than your doubts.",
+      "Behind every smile you wear, there’s a story of resilience. Keep shining; your journey inspires.",
+      "Every time you rise after a setback, you show the universe that nothing can break your spirit.",
+      "Some days are heavy, but your persistence makes you unstoppable. Keep going; better days are coming.",
+      "Your courage is quiet but powerful. Every challenge you face proves your strength.",
+      "You’ve been carrying battles no one else sees. That perseverance is your superpower.",
+      "Even when the path is unclear, your heart knows the way. Keep moving; growth comes quietly.",
+      "You are doing the best you can, and that is more than enough. Every effort matters.",
+      "Through every storm, you’ve kept your hope alive. That makes you extraordinary.",
+      "You may stumble, but each step forward is progress. Keep believing in yourself.",
+      "The weight you carry today builds the strength for tomorrow. You are resilient.",
+      "Even in silence, your determination speaks volumes. Keep going, quietly powerful.",
+      "Each day you keep trying is a victory, no matter how small. Celebrate your progress.",
+      "You are braver than you know, stronger than you feel, and more capable than you realize.",
+      "The challenges you face today are shaping the hero you are becoming. Keep walking forward.",
+      "Your struggles do not define you, your courage does. Keep moving, keep thriving.",
+      "Even when unnoticed, your perseverance changes the world around you. Keep shining.",
+      "You carry invisible strength every day. Believe in yourself; miracles are built from persistence."
     ];
 
     const colors = ["#FFDAB9","#E0FFFF","#FFE4E1","#F0E68C","#D8BFD8","#AFEEEE","#FFFACD","#F5DEB3","#E6E6FA","#F0FFF0"];
     const fonts = ["'Roboto', sans-serif", "'Montserrat', sans-serif", "'Lora', serif"];
+    const bgEmojis = ["✨","🌟","💫","🌸","🌿","🌞","🌈"];
 
     function showRandomQuote() {
       const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -93,7 +111,6 @@
       const quoteElem = document.getElementById('quote');
       const bodyElem = document.body;
 
-      // Animate fade out
       quoteElem.style.opacity = 0;
       bodyElem.style.transition = 'background-color 0.6s ease';
 
@@ -102,14 +119,30 @@
         quoteElem.style.fontFamily = randomFont;
         quoteElem.style.opacity = 1;
         bodyElem.style.backgroundColor = randomColor;
-      }, 500); // Match fade out timing
+        addBackgroundEmojis();
+      }, 500);
     }
 
-    // Show first quote immediately
+    function addBackgroundEmojis() {
+      // Remove old emojis
+      document.querySelectorAll('.emoji-bg').forEach(e => e.remove());
+
+      for(let i=0;i<5;i++){
+        const emoji = document.createElement('div');
+        emoji.className = 'emoji-bg';
+        emoji.innerText = bgEmojis[Math.floor(Math.random()*bgEmojis.length)];
+        emoji.style.left = Math.random()*100 + 'vw';
+        emoji.style.fontSize = (Math.random()*2 + 1) + 'em';
+        document.body.appendChild(emoji);
+      }
+    }
+
+    // First quote
     showRandomQuote();
 
-    // Change quote every 10 seconds
+    // Update every 10 seconds
     setInterval(showRandomQuote, 10000);
+
   </script>
 </body>
 </html>
