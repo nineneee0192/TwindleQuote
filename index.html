@@ -1,41 +1,95 @@
-‎<!DOCTYPE html>
-‎<html>
-‎<head>
-‎  <title>Motivational Quote</title>
-‎  <style>
-‎    body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; padding: 20px; }
-‎    #quote { font-size: 1.5em; }
-‎  </style>
-‎</head>
-‎<body>
-‎  <div id="quote"></div>
-‎
-‎  <script>
-‎    const quotes = [
-‎      "Believe in yourself!",
-‎      "Every day is a new opportunity.",
-‎      "Keep pushing forward!",
-‎      "Dream big, start small.",
-‎      "Stay positive, work hard, make it happen.",
-‎      "Mistakes are proof you're trying.",
-‎      "Your only limit is your mind.",
-‎      "Start where you are, use what you have, do what you can.",
-‎      "Success is a journey, not a destination.",
-‎      "Courage over comfort.",
-‎      "Do something today that your future self will thank you for.",
-‎      "You are stronger than you think.",
-‎      "Progress, not perfection.",
-‎      "Turn your wounds into wisdom.",
-‎      "Little by little, day by day.",
-‎      "Stay humble, hustle hard.",
-‎      "You don’t have to be perfect to be amazing.",
-‎      "Push yourself, because no one else is going to do it for you.",
-‎      "Don’t wait for opportunity. Create it.",
-‎      "Be the energy you want to attract."
-‎    ];
-‎
-‎    const randomIndex = Math.floor(Math.random() * quotes.length);
-‎    document.getElementById('quote').innerText = quotes[randomIndex];
-‎  </script>
-‎</body>
-‎</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motivational Quote</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      transition: background-color 0.6s;
+      padding: 20px;
+    }
+
+    #quote-box {
+      background: rgba(255, 255, 255, 0.85);
+      padding: 30px 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      max-width: 600px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s forwards;
+    }
+
+    #quote {
+      font-size: 1.6em;
+      font-weight: 700;
+      color: #333;
+    }
+
+    #author {
+      margin-top: 15px;
+      font-size: 1em;
+      font-weight: 400;
+      color: #555;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="quote-box">
+    <div id="quote"></div>
+    <div id="author"></div>
+  </div>
+
+  <script>
+    const quotes = [
+      {text: "Believe in yourself!", author: ""},
+      {text: "Every day is a new opportunity.", author: ""},
+      {text: "Keep pushing forward!", author: ""},
+      {text: "Dream big, start small.", author: ""},
+      {text: "Stay positive, work hard, make it happen.", author: ""},
+      {text: "Mistakes are proof you're trying.", author: ""},
+      {text: "Your only limit is your mind.", author: ""},
+      {text: "Start where you are, use what you have, do what you can.", author: ""},
+      {text: "Success is a journey, not a destination.", author: ""},
+      {text: "Courage over comfort.", author: ""},
+      {text: "Do something today that your future self will thank you for.", author: ""},
+      {text: "You are stronger than you think.", author: ""},
+      {text: "Progress, not perfection.", author: ""},
+      {text: "Turn your wounds into wisdom.", author: ""},
+      {text: "Little by little, day by day.", author: ""},
+      {text: "Stay humble, hustle hard.", author: ""},
+      {text: "You don’t have to be perfect to be amazing.", author: ""},
+      {text: "Push yourself, because no one else is going to do it for you.", author: ""},
+      {text: "Don’t wait for opportunity. Create it.", author: ""},
+      {text: "Be the energy you want to attract.", author: ""}
+    ];
+
+    const colors = ["#FFDAB9","#E0FFFF","#FFE4E1","#F0E68C","#D8BFD8","#AFEEEE","#FFFACD","#F5DEB3","#E6E6FA","#F0FFF0"];
+
+    // Pick a random quote
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    document.getElementById('quote').innerText = `"${randomQuote.text}"`;
+    document.getElementById('author').innerText = randomQuote.author;
+
+    // Pick a random background color
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    document.body.style.backgroundColor = randomColor;
+  </script>
+</body>
+</html>
