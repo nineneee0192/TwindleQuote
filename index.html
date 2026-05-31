@@ -1,148 +1,365 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Motivational Quote</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💌 A Little Question For You</title>
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-      transition: background-color 0.6s;
-      position: relative;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a0a2e 0%, #2d0a4e 40%, #1a0030 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Georgia', serif;
       overflow: hidden;
-    }
-
-    #quote-box {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 30px 40px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      max-width: 700px;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeIn 1s forwards;
-      z-index: 2;
       position: relative;
     }
 
-    #quote {
-      font-size: 1.5em;
-      font-weight: 700;
-      color: #333;
-      line-height: 1.5em;
-      transition: all 0.5s ease;
+    /* Floating emojis */
+    .floater {
+      position: fixed; pointer-events: none; z-index: 0; opacity: 0.12;
+      animation: floatUp 3s ease-in-out infinite alternate;
+    }
+    @keyframes floatUp {
+      from { transform: translateY(0) rotate(-5deg); }
+      to   { transform: translateY(-18px) rotate(5deg); }
     }
 
-    #author {
-      margin-top: 15px;
-      font-size: 1em;
-      font-weight: 400;
-      color: #555;
-      transition: all 0.5s ease;
+    /* Cards */
+    .card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 60px rgba(180,0,120,0.25);
+      padding: 40px 32px 36px;
+      text-align: center;
+      z-index: 1;
+      width: min(500px, 94vw);
+      max-height: 92vh;
+      overflow-y: auto;
+      position: relative;
     }
 
-    .emoji-bg {
-      position: absolute;
-      font-size: 2em;
-      opacity: 0.2;
-      user-select: none;
-      animation: float 10s linear infinite;
+    /* Animations */
+    @keyframes popIn {
+      0%   { transform: scale(0.7); opacity: 0; }
+      60%  { transform: scale(1.12); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes wowIn {
+      0%   { opacity: 0; transform: scale(0.5) rotate(-8deg); }
+      60%  { transform: scale(1.08) rotate(2deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,120,180,0.5); }
+      50%      { box-shadow: 0 0 0 14px rgba(255,120,180,0); }
+    }
+    @keyframes emojiFloat {
+      from { transform: translateY(0) rotate(-5deg); }
+      to   { transform: translateY(-14px) rotate(5deg); }
     }
 
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .anim-pop  { animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1) both; }
+    .anim-fade { animation: fadeUp 0.5s ease both; }
+    .anim-wow  { animation: wowIn 0.6s cubic-bezier(.34,1.56,.64,1) both; }
+
+    /* Buttons */
+    .yes-btn {
+      background: linear-gradient(135deg, #ff6eb4, #ff3d8b, #c0006e);
+      color: white; border: none; padding: 14px 40px; border-radius: 50px;
+      font-size: 20px; font-family: 'Georgia', serif; cursor: pointer;
+      animation: pulse 2s infinite; transition: transform 0.15s, filter 0.15s;
+    }
+    .yes-btn:hover { transform: scale(1.08); filter: brightness(1.1); }
+
+    .no-btn {
+      background: transparent; color: #c084d8; border: 2px solid #7a3fa0;
+      padding: 10px 28px; border-radius: 50px; font-size: 16px;
+      font-family: 'Georgia', serif; cursor: pointer; user-select: none;
+      transition: color 0.1s;
+    }
+    .no-btn:hover { color: #e0aaff; }
+    #no-btn.floating { position: absolute; transition: left 0.15s, top 0.15s; }
+
+    .chip {
+      background: rgba(255,255,255,0.07); border: 2px solid rgba(255,120,180,0.25);
+      color: #f0d0ff; padding: 10px 20px; border-radius: 30px; cursor: pointer;
+      font-size: 15px; font-family: 'Georgia', serif; transition: all 0.18s; margin: 5px;
+      display: inline-block;
+    }
+    .chip:hover { background: rgba(255,120,180,0.18); border-color: #ff6eb4; color: white; }
+    .chip.on { background: linear-gradient(135deg,#ff6eb4,#c0006e); border-color: #ff6eb4; color: white; font-weight: bold; }
+
+    .date-input {
+      background: rgba(255,255,255,0.08); border: 2px solid rgba(255,120,180,0.35);
+      color: #f0d0ff; padding: 13px 18px; border-radius: 14px;
+      font-size: 16px; font-family: 'Georgia', serif; width: 100%;
+      outline: none; color-scheme: dark; transition: border-color 0.2s;
+    }
+    .date-input:focus { border-color: #ff6eb4; }
+
+    .custom-input {
+      background: rgba(255,255,255,0.07); border: 2px solid rgba(255,120,180,0.3);
+      color: #f0d0ff; padding: 10px 16px; border-radius: 12px;
+      font-size: 15px; font-family: 'Georgia', serif; width: 100%;
+      outline: none; margin-top: 10px; transition: border-color 0.2s; display: none;
+    }
+    .custom-input:focus { border-color: #ff6eb4; }
+    .custom-input::placeholder { color: #8050a8; }
+
+    .send-btn {
+      background: linear-gradient(135deg,#ff6eb4,#c0006e); color: white; border: none;
+      padding: 14px 48px; border-radius: 50px; font-size: 18px;
+      font-family: 'Georgia', serif; cursor: pointer; margin-top: 20px;
+      transition: transform 0.15s, opacity 0.15s; opacity: 0.35;
+    }
+    .send-btn:not(:disabled):hover { transform: scale(1.05); }
+    .send-btn:not(:disabled) { opacity: 1; cursor: pointer; }
+    .send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .section { margin-bottom: 24px; text-align: left; }
+    .section-label {
+      color: #e0aaff; font-weight: bold; margin-bottom: 10px; font-size: 14px;
+      text-transform: uppercase; letter-spacing: 0.09em; display: block;
+    }
+    .chips-wrap { display: flex; flex-wrap: wrap; justify-content: center; }
+
+    h1 { color: #f8d6ff; font-size: 28px; font-weight: normal; margin-bottom: 10px; }
+    h2 { color: #f8d6ff; font-size: 24px; font-weight: normal; margin-bottom: 4px; }
+    .sub { color: #c084d8; font-size: 17px; margin-bottom: 36px; line-height: 1.6; }
+    .sub2 { color: #b87dd8; font-size: 15px; margin-bottom: 28px; }
+    .big-emoji { font-size: 52px; margin-bottom: 10px; display: block; animation: emojiFloat 2.5s ease-in-out infinite alternate; }
+    .icon { font-size: 42px; margin-bottom: 8px; display: block; }
+
+    .result-box {
+      background: rgba(255,120,180,0.12); border: 1px solid rgba(255,120,180,0.3);
+      border-radius: 16px; padding: 20px 28px; margin-top: 20px;
+      color: #f0d0ff; font-size: 17px; line-height: 2; text-align: left;
+    }
+    .result-box strong { color: #fff; }
+    .date-preview { color: #c084d8; font-size: 13px; margin-top: 8px; text-align: center; display: none; }
+    .mailto-link {
+      display: inline-block; margin-top: 14px; color: #f0a0e0;
+      font-size: 14px; text-decoration: underline; font-family: 'Georgia', serif;
     }
 
-    @keyframes float {
-      0% { transform: translateY(100vh) translateX(0); }
-      100% { transform: translateY(-10vh) translateX(30px); }
-    }
+    /* Phase containers */
+    .phase { display: none; }
+    .phase.active { display: block; }
+    #phase-wow { text-align: center; z-index: 1; padding: 32px; }
+    #phase-done { text-align: center; z-index: 1; padding: 32px; max-width: 420px; margin: auto; }
   </style>
 </head>
 <body>
-  <div id="quote-box">
-    <div id="quote"></div>
-    <div id="author"></div>
+
+<!-- Floating background emojis -->
+<script>
+  const emojis = ["💗","💜","✨","💫","💗","💜","✨","💫","💗","💜","✨","💫"];
+  emojis.forEach((e, i) => {
+    const d = document.createElement("div");
+    d.className = "floater";
+    d.textContent = e;
+    d.style.left = `${(i * 8.3) % 100}%`;
+    d.style.top  = `${(i * 13 + 10) % 100}%`;
+    d.style.fontSize = `${12 + (i % 3) * 8}px`;
+    d.style.animationDuration = `${3 + (i % 4)}s`;
+    d.style.animationDelay = `${i * 0.4}s`;
+    document.body.appendChild(d);
+  });
+</script>
+
+<!-- ASK PHASE -->
+<div id="phase-ask" class="phase active">
+  <div class="card anim-pop" id="ask-card" style="width:min(420px,92vw);min-height:300px;">
+    <span class="big-emoji">💌</span>
+    <h1>Hey you... 👀</h1>
+    <p class="sub">Would you like to go on a date with me? 🥺</p>
+    <div style="display:flex;gap:18px;justify-content:center;align-items:center;">
+      <button class="yes-btn" onclick="handleYes()">Yes! 🥰</button>
+      <button class="no-btn" id="no-btn" onmouseenter="moveNo()" ontouchstart="moveNo()" onclick="moveNo()">No 😒</button>
+    </div>
   </div>
+</div>
 
-  <script>
-    const quotes = [
-      "We know you’re struggling in silence, carrying doubts you don’t talk about. Still, you keep going. That alone proves how strong you really are.",
-      "Even when it feels like the world is against you, every small step forward is proof of your courage.",
-      "You survived days you thought you wouldn’t. You’re stronger than your fears and more resilient than your doubts.",
-      "Behind every smile you wear, there’s a story of resilience. Keep shining; your journey inspires.",
-      "Every time you rise after a setback, you show the universe that nothing can break your spirit.",
-      "Some days are heavy, but your persistence makes you unstoppable. Keep going; better days are coming.",
-      "Your courage is quiet but powerful. Every challenge you face proves your strength.",
-      "You’ve been carrying battles no one else sees. That perseverance is your superpower.",
-      "Even when the path is unclear, your heart knows the way. Keep moving; growth comes quietly.",
-      "You are doing the best you can, and that is more than enough. Every effort matters.",
-      "Through every storm, you’ve kept your hope alive. That makes you extraordinary.",
-      "You may stumble, but each step forward is progress. Keep believing in yourself.",
-      "The weight you carry today builds the strength for tomorrow. You are resilient.",
-      "Even in silence, your determination speaks volumes. Keep going, quietly powerful.",
-      "Each day you keep trying is a victory, no matter how small. Celebrate your progress.",
-      "You are braver than you know, stronger than you feel, and more capable than you realize.",
-      "The challenges you face today are shaping the hero you are becoming. Keep walking forward.",
-      "Your struggles do not define you, your courage does. Keep moving, keep thriving.",
-      "Even when unnoticed, your perseverance changes the world around you. Keep shining.",
-      "You carry invisible strength every day. Believe in yourself; miracles are built from persistence."
-    ];
+<!-- WOW PHASE -->
+<div id="phase-wow" class="phase">
+  <div class="anim-wow">
+    <div style="font-size:70px;margin-bottom:18px;">🎉</div>
+    <h2 style="color:#fff;font-size:30px;text-shadow:0 0 30px rgba(255,110,180,0.7);">Wow...</h2>
+    <p style="color:#f0a0e0;font-size:20px;margin-top:12px;">I knew you couldn't resist me 😏✨</p>
+  </div>
+</div>
 
-    const colors = ["#FFDAB9","#E0FFFF","#FFE4E1","#F0E68C","#D8BFD8","#AFEEEE","#FFFACD","#F5DEB3","#E6E6FA","#F0FFF0"];
-    const fonts = ["'Roboto', sans-serif", "'Montserrat', sans-serif", "'Lora', serif"];
-    const bgEmojis = ["✨","🌟","💫","🌸","🌿","🌞","🌈"];
+<!-- CHOOSE PHASE -->
+<div id="phase-choose" class="phase">
+  <div class="card anim-fade">
+    <span class="icon">🗓️</span>
+    <h2>Let's plan our date!</h2>
+    <p class="sub2">Pick whatever works for you 💕</p>
 
-    function showRandomQuote() {
-      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-      const randomFont = fonts[Math.floor(Math.random() * fonts.length)];
+    <div class="section">
+      <span class="section-label">📅 Pick any date</span>
+      <input type="date" class="date-input" id="date-input" oninput="onDateChange(this.value)" />
+      <p class="date-preview" id="date-preview"></p>
+    </div>
 
-      const quoteElem = document.getElementById('quote');
-      const bodyElem = document.body;
+    <div class="section">
+      <span class="section-label">⏰ Pick a time</span>
+      <div class="chips-wrap" id="time-chips"></div>
+    </div>
 
-      quoteElem.style.opacity = 0;
-      bodyElem.style.transition = 'background-color 0.6s ease';
+    <div class="section">
+      <span class="section-label">💑 What should we do?</span>
+      <div class="chips-wrap" id="activity-chips"></div>
+      <input type="text" class="custom-input" id="custom-input" placeholder="Tell me what you have in mind... 🥰" oninput="checkReady()" />
+    </div>
 
-      setTimeout(() => {
-        quoteElem.innerText = randomQuote;
-        quoteElem.style.fontFamily = randomFont;
-        quoteElem.style.opacity = 1;
-        bodyElem.style.backgroundColor = randomColor;
-        addBackgroundEmojis();
-      }, 500);
+    <button class="send-btn" id="send-btn" disabled onclick="handleSubmit()">Send it! 💌</button>
+  </div>
+</div>
+
+<!-- DONE PHASE -->
+<div id="phase-done" class="phase">
+  <div class="anim-pop">
+    <div style="font-size:64px;margin-bottom:16px;">💝</div>
+    <h2 style="color:#fff;font-size:26px;text-shadow:0 0 30px rgba(255,110,180,0.6);">It's a date! 🎊</h2>
+    <div class="result-box">
+      <div>📅 <strong id="result-date"></strong></div>
+      <div>⏰ <strong id="result-time"></strong></div>
+      <div>💑 <strong id="result-activity"></strong></div>
+    </div>
+    <p style="color:#c084d8;margin-top:20px;font-size:15px;">Can't wait! See you then 🥰✨</p>
+    <p style="color:#9a6ab0;margin-top:6px;font-size:13px;">Her choice has been sent to you 💌</p>
+    <a id="mailto-link" href="#" class="mailto-link">📧 Send to my email manually (backup)</a>
+  </div>
+</div>
+
+<script>
+  const YOUR_EMAIL = "johndaveabrera410@gmail.com";
+  const ACCESS_KEY = "5b025dae-b719-4a6e-a42d-09931f69d742";
+  const TIMES = ["Morning (10am)", "Afternoon (2pm)", "Evening (6pm)", "Night (8pm)", "Late night (11pm)"];
+  const ACTIVITIES = ["Coffee date ☕", "Dinner together 🍽️", "Movie night 🎬", "Gaming together 🎮", "Just talking all night 🌙", "Other 💭"];
+
+  let selectedTime = null;
+  let selectedActivity = null;
+
+  // Set min date to today
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("date-input").min = today;
+
+  // Build time chips
+  TIMES.forEach(t => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.textContent = t;
+    b.onclick = () => { selectChip("time-chips", b); selectedTime = t; checkReady(); };
+    document.getElementById("time-chips").appendChild(b);
+  });
+
+  // Build activity chips
+  ACTIVITIES.forEach(a => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.textContent = a;
+    b.onclick = () => {
+      selectChip("activity-chips", b); selectedActivity = a;
+      document.getElementById("custom-input").style.display = a === "Other 💭" ? "block" : "none";
+      checkReady();
+    };
+    document.getElementById("activity-chips").appendChild(b);
+  });
+
+  function selectChip(containerId, btn) {
+    document.querySelectorAll(`#${containerId} .chip`).forEach(c => c.classList.remove("on"));
+    btn.classList.add("on");
+  }
+
+  function formatDate(val) {
+    if (!val) return "";
+    return new Date(val + "T00:00:00").toLocaleDateString("en-US", {
+      weekday: "long", year: "numeric", month: "long", day: "numeric"
+    });
+  }
+
+  function onDateChange(val) {
+    const preview = document.getElementById("date-preview");
+    if (val) {
+      preview.textContent = "✨ " + formatDate(val);
+      preview.style.display = "block";
+    } else {
+      preview.style.display = "none";
     }
+    checkReady();
+  }
 
-    function addBackgroundEmojis() {
-      // Remove old emojis
-      document.querySelectorAll('.emoji-bg').forEach(e => e.remove());
+  function checkReady() {
+    const dateVal = document.getElementById("date-input").value;
+    const customVal = document.getElementById("custom-input").value.trim();
+    const activityOk = selectedActivity && (selectedActivity !== "Other 💭" || customVal);
+    const ready = dateVal && selectedTime && activityOk;
+    const btn = document.getElementById("send-btn");
+    btn.disabled = !ready;
+  }
 
-      for(let i=0;i<5;i++){
-        const emoji = document.createElement('div');
-        emoji.className = 'emoji-bg';
-        emoji.innerText = bgEmojis[Math.floor(Math.random()*bgEmojis.length)];
-        emoji.style.left = Math.random()*100 + 'vw';
-        emoji.style.fontSize = (Math.random()*2 + 1) + 'em';
-        document.body.appendChild(emoji);
-      }
-    }
+  // Move No button
+  function moveNo() {
+    const card = document.getElementById("ask-card");
+    const btn  = document.getElementById("no-btn");
+    const rect = card.getBoundingClientRect();
+    const bw = btn.offsetWidth, bh = btn.offsetHeight;
+    const x = Math.random() * (rect.width - bw - 20) + 10;
+    const y = Math.random() * (rect.height - bh - 20) + 10;
+    btn.classList.add("floating");
+    btn.style.left = x + "px";
+    btn.style.top  = y + "px";
+  }
 
-    // First quote
-    showRandomQuote();
+  function showPhase(id) {
+    document.querySelectorAll(".phase").forEach(p => p.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
 
-    // Update every 10 seconds
-    setInterval(showRandomQuote, 10000);
+  function handleYes() {
+    showPhase("phase-wow");
+    setTimeout(() => showPhase("phase-choose"), 3500);
+  }
 
-  </script>
+  async function handleSubmit() {
+    const dateVal = document.getElementById("date-input").value;
+    const customVal = document.getElementById("custom-input").value.trim();
+    const finalActivity = selectedActivity === "Other 💭" ? customVal : selectedActivity;
+    const formattedDate = formatDate(dateVal);
+    const btn = document.getElementById("send-btn");
+    btn.textContent = "Sending... 💌";
+    btn.disabled = true;
+
+    try {
+      await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: ACCESS_KEY,
+          subject: "💌 She said YES to a date!",
+          from_name: "Date Request App",
+          to: YOUR_EMAIL,
+          message: `She picked:\n📅 Date: ${formattedDate}\n⏰ Time: ${selectedTime}\n💑 Activity: ${finalActivity}`,
+        }),
+      });
+    } catch(_) {}
+
+    // Show done screen
+    document.getElementById("result-date").textContent = formattedDate;
+    document.getElementById("result-time").textContent = selectedTime;
+    document.getElementById("result-activity").textContent = finalActivity;
+    document.getElementById("mailto-link").href =
+      `mailto:${YOUR_EMAIL}?subject=💌 She said YES!&body=She picked:%0A📅 ${formattedDate}%0A⏰ ${selectedTime}%0A💑 ${finalActivity}`;
+    showPhase("phase-done");
+  }
+</script>
 </body>
 </html>
